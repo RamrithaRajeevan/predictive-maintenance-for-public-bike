@@ -1,0 +1,70 @@
+body {
+  font-family: "Poppins", sans-serif;
+  background: linear-gradient(135deg, #f5f8ff, #e9eef5);
+  color: #222;
+  margin: 0;
+  padding: 20px;
+}
+
+h1 {
+  text-align: center;
+  font-size: 28px;
+  color: #0b3558;
+  margin-bottom: 30px;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 30px;
+  align-items: start;
+}
+
+/* ===== Bike Cards ===== */
+.bike-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+.bike-card {
+  background: #fff;
+  padding: 15px;
+  border-radius: 15px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+  border-left: 6px solid;
+  transition: all 0.3s ease;
+}
+
+.bike-card.green {
+  border-color: #2ecc71;
+}
+
+.bike-card.red {
+  border-color: #e74c3c;
+}
+
+/* ===== Map ===== */
+#map {
+  height: 400px;
+  border-radius: 15px;
+  margin-top: 10px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* ===== Summary ===== */
+.summary {
+  margin-top: 40px;
+  background: #fff;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .container {
+    grid-template-columns: 1fr;
+  }
+}

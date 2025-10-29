@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Predictive Bike Maintenance System</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+</head>
+<body>
+  <h1>🚴 Predictive Bike Maintenance System</h1>
+
+  <div class="container">
+    <!-- Left: Bikes needing attention -->
+    <section class="bike-section">
+      <h2>🛠️ Bikes Needing Attention</h2>
+      <div class="bike-list">
+        {% for bike in bikes %}
+        <div class="bike-card {{ bike.color }}">
+          <h3>{{ bike.id }}</h3>
+          <p><strong>Distance:</strong> {{ bike.distance }} km</p>
+          <p><strong>Brake Risk:</strong> {{ bike.brake_risk }}%</p>
+          <p><strong>Chain Risk:</strong> {{ bike.chain_risk }}%</p>
+          <p><strong>Gear Risk:</strong> {{ bike.gear_risk }}%</p>
+          <p><strong>Tire Risk:</strong> {{ bike.tire_risk }}%</p>
+          <p><strong>Status:</strong> {{ bike.status }}</p>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+
+    <!-- Right: Map -->
+    <section class="map-section">
+      <h2>🗺️ Maintenance Route Plan</h2>
+      <div id="map"></div>
+    </section>
+  </div>
+
+  <!-- Summary at bottom -->
+  <div class="summary">
+    <h2>📊 System Summary</h2>
+    <p><strong>Total Bikes:</strong> {{ total_bikes }}</p>
+    <p><strong>Healthy:</strong> {{ healthy }}</p>
+    <p><strong>Needs Maintenance:</strong> {{ needs_maintenance }}</p>
+    <div class="legend">
+      <span>🟢 Green = Healthy Bikes</span>
+      <span>🔴 Red = Needs Maintenance</span>
+    </div>
+  </div>
+
+  <script>
+    // Initialize the map
+    var map = L.map('map').setView([12.9716, 77.5946], 12);
+
+    // Add OpenStreetMap layer
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Example bike locations (replace with real GPS data if available)
+    const bikeLocations = [
+    { name: "Bike-101", lat: 12.9716, lon: 77.5946, status: "Needs Maintenance" }, // MG Road
+    { name: "Bike-202", lat: 12.9352, lon: 77.6245, status: "Healthy" }, // Koramangala
+    { name: "Bike-303", lat: 12.9260, lon: 77.6762, status: "Needs Maintenance" }, // Bellandur
+    { name: "Bike-404", lat: 12.9719, lon: 77.6412, status: "Healthy" }, // Indiranagar
+    { name: "Bike-505", lat: 12.9141, lon: 77.6101, status: "Needs Maintenance" }, // Jayanagar
+    { name: "Bike-606", lat: 12.9981, lon: 77.5929, status: "Healthy" }  // Malleshwaram
+];
+
+    // Add markers to the map
+    bikeLocations.forEach(bike => {
+        let color = bike.status === "Needs Maintenance" ? "red" : "green";
+        let marker = L.circleMarker([bike.lat, bike.lon], {
+            color: color,
+            radius: 8,
+            fillOpacity: 0.8
+        }).addTo(map);
+        marker.bindPopup(`<b>${bike.name}</b><br>Status: ${bike.status}`);
+    });
+
+    // Draw route line between maintenance bikes
+    const maintenanceBikes = bikeLocations.filter(b => b.status === "Needs Maintenance");
+    const routeCoords = maintenanceBikes.map(b => [b.lat, b.lon]);
+
+    if (routeCoords.length > 1) {
+        L.polyline(routeCoords, { color: 'blue', weight: 3 }).addTo(map);
+    }
+</script>
+
+</body>
+</html>
